@@ -1,5 +1,5 @@
 /*
- This file is part of GiftKit.
+ This file is part of RMGiftKit.
  
  Copyright (c) 2011, Rune Madsen
  All rights reserved.
@@ -27,14 +27,14 @@
  */
 
 /*
- * GiftKit.h
- * GiftKit
+ * RMGiftKit.h
+ * RMGiftKit
  *
  * Created by Rune Madsen on 29/5/11.
  * http://www.runmad.com/blog/
  * Copyright 2011 Rune Madsen / The App Boutique. All rights reserved.
  *
- * GiftKit is inspired by and lends lots of code from Appirater
+ * RMGiftKit is inspired by and lends lots of code from Appirater
  * Get it here: https://github.com/arashpayan/appirater/
  * Created by Arash Payan on 9/5/09.
  * http://arashpayan.com
@@ -43,7 +43,7 @@
  */
 
 
-#import "GiftKit.h"
+#import "RMGiftKit.h"
 #import <SystemConfiguration/SCNetworkReachability.h>
 #include <netinet/in.h>
 
@@ -57,15 +57,15 @@ NSString *const kGiftKitReminderRequestDate			= @"kGiftKitReminderRequestDate";
 
 NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8";
 
-@interface GiftKit (hidden)
+@interface RMGiftKit (hidden)
 - (BOOL)connectedToNetwork;
-+ (GiftKit*)sharedInstance;
++ (RMGiftKit*)sharedInstance;
 - (void)showGiftingAlert;
 - (BOOL)ratingConditionsHaveBeenMet;
 - (void)incrementUseCount;
 @end
 
-@implementation GiftKit (hidden)
+@implementation RMGiftKit (hidden)
 
 - (BOOL)connectedToNetwork {
     // Create zero addy
@@ -98,13 +98,13 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
     return ((isReachable && !needsConnection) || nonWiFi) ? (testConnection ? YES : NO) : NO;
 }
 
-+ (GiftKit*)sharedInstance {
-	static GiftKit *giftkit = nil;
++ (RMGiftKit*)sharedInstance {
+	static RMGiftKit *giftkit = nil;
 	if (giftkit == nil)
 	{
 		@synchronized(self) {
 			if (giftkit == nil) {
-				giftkit = [[GiftKit alloc] init];
+				giftkit = [[RMGiftKit alloc] init];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:@"UIApplicationWillResignActiveNotification" object:nil];
             }
         }
@@ -176,7 +176,7 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 	}
 	
 	if (GIFTKIT_DEBUG)
-		NSLog(@"GIFTKIT Tracking version: %@", trackingVersion);
+		NSLog(@"RMGiftKit Tracking version: %@", trackingVersion);
 	
 	if ([trackingVersion isEqualToString:version])
 	{
@@ -193,7 +193,7 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 		useCount++;
 		[userDefaults setInteger:useCount forKey:kGiftKitUseCount];
 		if (GIFTKIT_DEBUG)
-			NSLog(@"GIFTKIT Use count: %d", useCount);
+			NSLog(@"RMGiftKit Use count: %d", useCount);
 	}
 	else
 	{
@@ -224,7 +224,7 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 	}
 	
 	if (GIFTKIT_DEBUG)
-		NSLog(@"GIFTKIT Tracking version: %@", trackingVersion);
+		NSLog(@"RMGiftKit Tracking version: %@", trackingVersion);
 	
 	if ([trackingVersion isEqualToString:version])
 	{
@@ -241,7 +241,7 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 		sigEventCount++;
 		[userDefaults setInteger:sigEventCount forKey:kGiftKitSignificantEventCount];
 		if (GIFTKIT_DEBUG)
-			NSLog(@"GIFTKIT Significant event count: %d", sigEventCount);
+			NSLog(@"RMGiftKit Significant event count: %d", sigEventCount);
 	}
 	else
 	{
@@ -261,11 +261,11 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 @end
 
 
-@interface GiftKit ()
+@interface RMGiftKit ()
 - (void)hideGiftingAlert;
 @end
 
-@implementation GiftKit
+@implementation RMGiftKit
 
 @synthesize giftingAlert;
 
@@ -300,7 +300,7 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 }
 
 + (void)appLaunched {
-	[GiftKit appLaunched:YES];
+	[RMGiftKit appLaunched:YES];
 }
 
 + (void)appLaunched:(BOOL)canPromptForRating {
@@ -314,21 +314,21 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 - (void)hideGiftingAlert {
 	if (self.giftingAlert.visible) {
 		if (GIFTKIT_DEBUG)
-			NSLog(@"GIFTKIT hiding Alert");
+			NSLog(@"RMGiftKit hiding Alert");
 		[self.giftingAlert dismissWithClickedButtonIndex:-1 animated:NO];
 	}	
 }
 
 + (void)appWillResignActive {
 	if (GIFTKIT_DEBUG)
-		NSLog(@"GIFTKIT appWillResignActive");
-	[[GiftKit sharedInstance] hideGiftingAlert];
+		NSLog(@"RMGiftKit appWillResignActive");
+	[[RMGiftKit sharedInstance] hideGiftingAlert];
 }
 
 + (void)appEnteredForeground:(BOOL)canPromptForRating {
 	NSNumber *_canPromptForRating = [[NSNumber alloc] initWithBool:canPromptForRating];
 	[NSThread detachNewThreadSelector:@selector(incrementAndGift:)
-							 toTarget:[GiftKit sharedInstance]
+							 toTarget:[RMGiftKit sharedInstance]
 						   withObject:_canPromptForRating];
 	[_canPromptForRating release];
 }
@@ -336,14 +336,14 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 + (void)userDidSignificantEvent:(BOOL)canPromptForRating {
 	NSNumber *_canPromptForRating = [[NSNumber alloc] initWithBool:canPromptForRating];
 	[NSThread detachNewThreadSelector:@selector(incrementSignificantEventAndGift:)
-							 toTarget:[GiftKit sharedInstance]
+							 toTarget:[RMGiftKit sharedInstance]
 						   withObject:_canPromptForRating];
 	[_canPromptForRating release];
 }
 
 + (void)giftApp {
 #if TARGET_IPHONE_SIMULATOR
-	NSLog(@"GIFTKIT NOTE: iTunes App Store is not supported on the iOS simulator. Unable to open App Store page.");
+	NSLog(@"RMGiftKit NOTE: iTunes App Store is not supported on the iOS simulator. Unable to open App Store page.");
 #else
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString *reviewURL = [templateGiftURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", GIFTKIT_APP_ID]];
@@ -367,7 +367,7 @@ NSString *templateGiftURL = @"http://itunes.apple.com/app/next-ttc/idAPP_ID?mt=8
 		case 1:
 		{
 			// they want to gift it
-			[GiftKit giftApp];
+			[RMGiftKit giftApp];
 			break;
 		}
 		case 2:

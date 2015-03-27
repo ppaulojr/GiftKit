@@ -1,5 +1,5 @@
 /*
- This file is part of GiftKit.
+ This file is part of RMGiftKit.
  
  Copyright (c) 2011, Rune Madsen
  All rights reserved.
@@ -27,14 +27,14 @@
  */
 
 /*
- * GiftKit.h
- * GiftKit
+ * RMGiftKit.h
+ * RMGiftKit
  *
  * Created by Rune Madsen on 29/5/11.
  * http://www.runmad.com/blog/
  * Copyright 2011 Rune Madsen / The App Boutique. All rights reserved.
  *
- * GiftKit is heavily inspired by and borrows lots of code from Appirater
+ * RMGiftKit is heavily inspired by and borrows lots of code from Appirater
  * Get it here: https://github.com/arashpayan/appirater/
  * Created by Arash Payan on 9/5/09.
  * http://arashpayan.com
@@ -96,9 +96,9 @@ extern NSString *const kGiftKitDeclinedToGift;
 /*
 // An example of a 'use' would be if the user launched the app. Bringing the app
 // into the foreground (on devices that support it) would also be considered
-// a 'use'. You tell GiftKit about these events using the two methods:
-// [GiftKit appLaunched:]
-// [GiftKit appEnteredForeground:]
+// a 'use'. You tell RMGiftKit about these events using the two methods:
+// [RMGiftKit appLaunched:]
+// [RMGiftKit appEnteredForeground:]
  
 // Users need to 'use' the same version of the app this many times before
 // before they will be prompted to gift it.
@@ -112,26 +112,26 @@ extern NSString *const kGiftKitDeclinedToGift;
 // layer of filtering that can be used to make sure that only the most
 // loyal of your users are being prompted to gift the app.
 // If you leave this at a value of -1, then this won't be a criteria
-// used for rating. To tell GiftKit that the user has performed
+// used for rating. To tell RMGiftKit that the user has performed
 // a significant event, call the method:
-// [GiftKit userDidSignificantEvent:];
+// [RMGiftKit userDidSignificantEvent:];
 */
 #define GIFTKIT_SIG_EVENTS_UNTIL_PROMPT		25	// integer
 
 /*
 // Once the rating alert is presented to the user, they might select
-// 'Remind me later'. This value specifies how long (in days) GiftKit
+// 'Remind me later'. This value specifies how long (in days) RMGiftKit
 // will wait before reminding them to gift the app.
 */
 #define GIFTKIT_TIME_BEFORE_REMINDING		2	// double
 
 /*
-// 'YES' will show the GiftKit alert everytime. Useful for testing how your message
+// 'YES' will show the RMGiftKit alert everytime. Useful for testing how your message
 // looks and making sure the link to your app in the App Store works.
 */
 #define GIFTKIT_DEBUG						NO
 
-@interface GiftKit : NSObject <UIAlertViewDelegate> {
+@interface RMGiftKit : NSObject <UIAlertViewDelegate> {
 	UIAlertView	*giftingAlert;
 }
 
@@ -141,12 +141,12 @@ extern NSString *const kGiftKitDeclinedToGift;
 // DEPRECATED: While still functional, it's better to use
 // appLaunched:(BOOL)canPromptForRating instead.
 // 
-// Calls [GiftKit appLaunched:YES]. See appLaunched: for details of functionality.
+// Calls [RMGiftKit appLaunched:YES]. See appLaunched: for details of functionality.
 */
 + (void)appLaunched;
 
 /*
-// Tells GiftKit that the app has launched, and on devices that do NOT
+// Tells RMGiftKit that the app has launched, and on devices that do NOT
 // support multitasking, the 'uses' count will be incremented. You should
 // call this method at the end of your application delegate's
 // application:didFinishLaunchingWithOptions: method.
@@ -161,7 +161,7 @@ extern NSString *const kGiftKitDeclinedToGift;
 + (void)appLaunched:(BOOL)canPromptForRating;
 
 /*
-// Tells GiftKit that the app was brought to the foreground on multitasking
+// Tells RMGiftKit that the app was brought to the foreground on multitasking
 // devices. You should call this method from the application delegate's
 // applicationWillEnterForeground: method.
 // 
@@ -175,7 +175,7 @@ extern NSString *const kGiftKitDeclinedToGift;
 + (void)appEnteredForeground:(BOOL)canPromptForRating;
 
 /*
-// Tells GiftKit that the user performed a significant event. A significant
+// Tells RMGiftKit that the user performed a significant event. A significant
 // event is whatever you want it to be. If you're app is used to make VoIP
 // calls, then you might want to call this method whenever the user places
 // a call. If it's a game, you might want to call this whenever the user
@@ -191,14 +191,14 @@ extern NSString *const kGiftKitDeclinedToGift;
 + (void)userDidSignificantEvent:(BOOL)canPromptForRating;
 
 /*
-// Tells GiftKit to open the App Store page for the app
-// GiftKit also records the fact that this has happened, so the
+// Tells RMGiftKit to open the App Store page for the app
+// RMGiftKit also records the fact that this has happened, so the
 // user won't be prompted again to gift the app (before next version).
 //
 // The only case where you should call this directly is if your app has an
 // explicit "Gift this app" command somewhere.  In all other cases, don't worry
 // about calling this -- instead, just call the other functions listed above,
-// and let GiftKit handle the bookkeeping of deciding when to ask the user
+// and let RMGiftKit handle the bookkeeping of deciding when to ask the user
 // whether to gift the app.
 //
 // See my blog post on Gifting: http://runmad.com/blog/2011/04/assisted-word-of-mouth-get-users-to-sell-your-app/
